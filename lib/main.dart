@@ -35,12 +35,32 @@ class HomePage extends StatefulWidget{
   State<HomePage> createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage>{
+  bool isImageVisible = true;
+  TextEditingController textController = TextEditingController();
+
+  void hideImage(){
+    setState(() {
+      isImageVisible = false;
+    });
+  }
+
   @override
   void initState(){
     super.initState();
    LocalNotification.initialize(flutterLocalNotificationsPlugin);
 
   }
+
+  @override
+  void dispose(){
+    textController.dispose();
+    super.dispose();
+  }
+  void onButtonPressed(String name){
+    hideImage();
+    LocalNotification.showBigTextNotification(title: "Surprise!", body: "Howzit $name", fln: flutterLocalNotificationsPlugin);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -48,6 +68,7 @@ class _HomePageState extends State<HomePage>{
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (isImageVisible)
           Image.asset(
             'assets/images/howzit.jpg',
             height: 300,
@@ -55,8 +76,9 @@ class _HomePageState extends State<HomePage>{
             fit: BoxFit.cover,
           ),
           const SizedBox(height: 20),
-          const TextField(
-            decoration: InputDecoration(
+           TextField(
+            controller: textController,
+            decoration: const InputDecoration(
               hintText: 'Whats your name?',
               border: OutlineInputBorder(),
             ),
@@ -64,7 +86,8 @@ class _HomePageState extends State<HomePage>{
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () {
-              LocalNotification.showBigTextNotification(title: "Message Title", body: "Your long body", fln: flutterLocalNotificationsPlugin);
+              String enteredText = textController.text;
+              onButtonPressed(enteredText);
             },
             child: const Text('Click for a surprise'),
           ),
@@ -73,7 +96,4 @@ class _HomePageState extends State<HomePage>{
     );
   }
 
-
 }
-
-//LocalNotification.showBigTextNotification(title: "Message Title", body: "Your long body", fln: flutterLocalNotificationsPlugin);

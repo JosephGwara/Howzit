@@ -14,9 +14,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Howzit'),
+        ),body: const Material(
+        child: HomePage(),
+      ),
+      )
+
     );
   }
 }
@@ -34,36 +41,39 @@ class _HomePageState extends State<HomePage>{
    LocalNotification.initialize(flutterLocalNotificationsPlugin);
 
   }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin :Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF3ac3cb), Color(0xFFf85187)])),
-    child: Scaffold(backgroundColor: Colors.transparent,
-    appBar: AppBar(
-    backgroundColor: Colors.blue.withOpacity(0.5),
-    ),
-    body: Center(
-    child:Container(
-    decoration: BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.circular(20)
-    ),
-    width: 200,
-    height: 80,
-    child: ElevatedButton(
-    onPressed: (){
-      LocalNotification.showBigTextNotification(title: "Message Title", body: "Your long body", fln: flutterLocalNotificationsPlugin);
-    },child: const Text("SAY Hello"),
-    ),
-    )
-    ),
-    )
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Image.asset(
+            'assets/images/howzit.jpg',
+            height: 300,
+            width: 150,
+            fit: BoxFit.cover,
+          ),
+          const SizedBox(height: 20),
+          const TextField(
+            decoration: InputDecoration(
+              hintText: 'Whats your name?',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              LocalNotification.showBigTextNotification(title: "Message Title", body: "Your long body", fln: flutterLocalNotificationsPlugin);
+            },
+            child: const Text('Click for a surprise'),
+          ),
+        ],
+      ),
     );
   }
 
+
 }
+
+//LocalNotification.showBigTextNotification(title: "Message Title", body: "Your long body", fln: flutterLocalNotificationsPlugin);

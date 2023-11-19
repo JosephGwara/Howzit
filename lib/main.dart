@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:howzit_zilo/localnotification.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -38,9 +39,9 @@ class _HomePageState extends State<HomePage>{
   bool isImageVisible = true;
   TextEditingController textController = TextEditingController();
 
-  void hideImage(){
+  void toggleImage(){
     setState(() {
-      isImageVisible = false;
+      isImageVisible = !isImageVisible;
     });
   }
 
@@ -57,8 +58,22 @@ class _HomePageState extends State<HomePage>{
     super.dispose();
   }
   void onButtonPressed(String name){
-    hideImage();
-    LocalNotification.showBigTextNotification(title: "Surprise!", body: "Howzit $name", fln: flutterLocalNotificationsPlugin);
+    if(name.isEmpty){
+      Fluttertoast.showToast(msg: "Please enter a name",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.SNACKBAR);
+      return;
+    }else{
+      if (isImageVisible){
+        toggleImage();
+        LocalNotification.showBigTextNotification(title: "Surprise!", body: "Howzit $name!", fln: flutterLocalNotificationsPlugin);
+      }
+      else{
+        toggleImage();
+        textController.clear();
+      }
+    }
+
   }
 
   @override
@@ -89,7 +104,7 @@ class _HomePageState extends State<HomePage>{
               String enteredText = textController.text;
               onButtonPressed(enteredText);
             },
-            child: const Text('Click for a surprise'),
+            child: Text(isImageVisible ? 'Click for a surprise':'Reset'),
           ),
         ],
       ),
